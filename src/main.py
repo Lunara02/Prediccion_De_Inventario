@@ -45,9 +45,10 @@ class Tienda(gym.Env):
             info['compra_fallida'] = True
         demand = np.random.randint(0, 30)
         sold = min(self.stock, demand)
-        earnings = sold * (self.price * 2)
-        self.money += earnings      # Entra dinero
+        revenue = sold * (self.price * 2)
+        self.money += revenue      # Entra dinero
         self.stock -= sold          # Sale stock
+        missed_sales = demand - sold  # Ventas perdidas
 
         #2. OBSERVACIÓN
         if self.day < self.max_day:
@@ -63,8 +64,14 @@ class Tienda(gym.Env):
         ], dtype=np.int32)
 
         #3. RECOMPENSA
-        actual_money = self.money + (self.stock * self.price)
-        reward = (actual_money - previus_money) - penalty
+        profit = revenue - cost
+        opportunity_penalty = missed_sales * (self.price * 0.5)
+        storage_penalty = self.stock * (self.price * 0.1)
+        if info.get('compra_fallida'):
+            penalty = 100
+        else:
+            penalty = 0
+        reward = profit - opportunity_penalty - storage_penalty - penalty
 
         return observation, reward, terminated, truncated, info
 
