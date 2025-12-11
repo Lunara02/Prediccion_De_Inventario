@@ -10,8 +10,8 @@ def run(episodes, is_training=True, render=False):
     env = Tienda(30)
 
     # Divide position and velocity into segments
-    money_space = np.linspace(env.observation_space.low[0], env.observation_space.high[0], MAX_DEMANDA*30*10 + 100 + 1)    # Between -1.2 and 0.6
-    stock_space = np.linspace(env.observation_space.low[1], env.observation_space.high[1], 100)   
+    money_space = np.linspace(env.observation_space.low[0], env.observation_space.high[0], 4401)    # Between -1.2 and 0.6
+    stock_space = np.linspace(env.observation_space.low[1], env.observation_space.high[1], 151)   
     price_space = np.linspace(env.observation_space.low[2], env.observation_space.high[2], 1)    # Between -0.07 and 0.07
     day_space = np.linspace(env.observation_space.low[3], env.observation_space.high[3], 31)    # Between -0.07 and 0.07
 
