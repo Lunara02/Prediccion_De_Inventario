@@ -101,19 +101,3 @@ class Tienda(gym.Env):
         print(f"--- Día {self.day} ---")
         print(f"Dinero: {self.money:.2f} | Stock: {self.stock}")
 
-
-env = Tienda(max_day=30)
-obs, info = env.reset()
-print("Estado Inicial:", obs)
-
-for _ in range(100):
-    # Tomar una acción aleatoria (0 a 5)
-    action = env.action_space.sample()
-    # Dar un paso
-    obs, reward, terminated, truncated, info = env.step(action)
-    # Usar tu nueva función render
-    env.render()
-    print(f"Acción: Comprar {action*10}u | Recompensa: {reward}")
-    
-    if terminated:
-        break
