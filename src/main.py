@@ -2,21 +2,28 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 
+MAX_DEMANDA = 30
+
 class Tienda(gym.Env):
     def __init__(self, max_day):
         super(Tienda, self).__init__()
         # Estado inicial
         self.max_day = max_day
         self.money = 100
-        self.price = 10
         self.stock = 0
+        self.price = 10
         self.day = 0
         #Acciones posibles, comprar de 0, 10, 20, 30, 40, 50 unidades
         self.action_space = spaces.Discrete(6)
         #Definir observaciones, el agente ve el dinero, precio y stock disponible
         self.observation_space = spaces.Box(
-            low=0, #Para que no sean negativos
-            high=np.iinfo(np.int32).max, #No hay limite superior
+            low=np.array([0,0,10,0], dtype=np.int32), #Para que no sean negativos
+            high=np.array([
+            MAX_DEMANDA*30*10 + 100,          # Dinero máximo estimado
+            1500,           # Stock máximo estimado
+            10,            # Precio máximo
+            self.max_day   # Día máximo
+        ], dtype=np.int32), #No hay limite superior
             shape=(4,), #Cantidad de variables a observar
             dtype=np.int32
         )
@@ -43,7 +50,7 @@ class Tienda(gym.Env):
         else:
             penalty = 10
             info['compra_fallida'] = True
-        demand = np.random.randint(0, 30)
+        demand = np.random.randint(0, MAX_DEMANDA)
         sold = min(self.stock, demand)
         revenue = sold * (self.price * 2)
         self.money += revenue      # Entra dinero
